@@ -18,6 +18,7 @@ package com.astuetz;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -88,7 +89,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 	private int dividerWidth = 1;
 
 	private int tabTextSize = 12;
-	private int tabTextColor = 0xFF666666;
+	private ColorStateList tabTextColor = null;
 	private Typeface tabTypeface = null;
 	private int tabTypefaceStyle = Typeface.BOLD;
 
@@ -132,7 +133,10 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 		TypedArray a = context.obtainStyledAttributes(attrs, ATTRS);
 
 		tabTextSize = a.getDimensionPixelSize(0, tabTextSize);
-		tabTextColor = a.getColor(1, tabTextColor);
+		tabTextColor = a.getColorStateList(1);
+		if(tabTextColor == null) {
+			tabTextColor = ColorStateList.valueOf(0xFF666666);
+		}
 
 		a.recycle();
 
@@ -323,6 +327,12 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 		float lineLeft = currentTab.getLeft();
 		float lineRight = currentTab.getRight();
 
+		// select the selected tab
+		for (int i = 0; i < tabCount; i++) {
+			View tab = tabsContainer.getChildAt(i);
+			tab.setSelected(tab == currentTab);
+		}
+
 		// if there is an offset, start interpolating left and right coordinates between current and next tab
 		if (currentPositionOffset > 0f && currentPosition < tabCount - 1) {
 
@@ -492,16 +502,16 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 	}
 
 	public void setTextColor(int textColor) {
-		this.tabTextColor = textColor;
+		this.tabTextColor = ColorStateList.valueOf(textColor);
 		updateTabStyles();
 	}
 
 	public void setTextColorResource(int resId) {
-		this.tabTextColor = getResources().getColor(resId);
+		this.tabTextColor = getResources().getColorStateList(resId);
 		updateTabStyles();
 	}
 
-	public int getTextColor() {
+	public ColorStateList getTextColors() {
 		return tabTextColor;
 	}
 
