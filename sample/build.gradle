@@ -1,4 +1,4 @@
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 dependencies {
     compile project(':library')
@@ -31,7 +31,9 @@ android {
             res.srcDirs = ['res']
         }
     }
-
+    lintOptions {
+        abortOnError false
+    }
 }
 
 File propFile = file('signing.properties');
